@@ -27,8 +27,8 @@ jobs:
       run: |
         echo "✅ Injecting API key..."
         mkdir dist
-        export OPENWEATHER_API_KEY=${{ secrets.OPENWEATHER_API_KEY }}
-        envsubst < script.template.js > dist/script.js
+        echo "${{ secrets.OPENWEATHER_API_KEY }}" | \
+          OPENWEATHER_API_KEY=$(cat -) envsubst < script.template.js > dist/script.js
         cp index.html style.css dist/
         echo "🔍 Final script.js contents:"
         cat dist/script.js
