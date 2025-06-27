@@ -25,10 +25,9 @@ jobs:
 
     - name: Inject API key and prepare dist folder
       run: |
-        echo "✅ Injecting API key..."
+        echo "✅ Injecting API key using sed"
         mkdir dist
-        echo "${{ secrets.OPENWEATHER_API_KEY }}" | \
-          OPENWEATHER_API_KEY=$(cat -) envsubst < script.template.js > dist/script.js
+        sed "s|\${OPENWEATHER_API_KEY}|${{ secrets.OPENWEATHER_API_KEY }}|g" script.template.js > dist/script.js
         cp index.html style.css dist/
         echo "🔍 Final script.js contents:"
         cat dist/script.js
