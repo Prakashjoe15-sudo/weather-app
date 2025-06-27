@@ -12,15 +12,21 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Inject API Key into JS
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+
+    - name: Install dependencies
+      run: npm install -g http-server gettext
+
+    - name: Inject API key and prepare dist folder
+      env:
+        OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
       run: |
-        echo "Injecting API key..."
         mkdir dist
         envsubst < script.template.js > dist/script.js
         cp index.html style.css dist/
-    
-      env:
-        OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
