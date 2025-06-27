@@ -1,31 +1,50 @@
 # 🌤️ CloudCast Weather App
 
-CloudCast is a simple weather application that fetches real-time weather data using the OpenWeatherMap API.
+CloudCast is a lightweight weather forecast application built using pure HTML, CSS, and JavaScript. It consumes the OpenWeatherMap API to display real-time weather information for any city entered by the user.
 
-## 🚀 Features
-- Search weather by city name
-- View temperature, humidity, and condition
-- Deployed via GitHub Actions
-- Dockerized for easy deployment
+This project also demonstrates a secure CI/CD pipeline using GitHub Actions, where the API key is dynamically injected at deployment time using a GitHub secret and shell-based string substitution.
 
-## 🛠 Tech Stack
-- HTML, CSS, JavaScript
-- OpenWeatherMap API
-- Docker
-- GitHub Actions
+🧱 Architecture & Implementation
+🔹 Frontend
+Static frontend app built using vanilla JavaScript, CSS, and HTML
 
-## 🧪 Run Locally
-```bash
-docker build -t cloudcast .
-docker run -p 8080:8080 cloudcast
-```
+Takes city input from user and fetches live weather data via fetch()
 
-Then open `http://localhost:8080` in your browser.
+Displays temperature, weather condition, and humidity
 
-## 📈 Monitoring Ideas (SRE Focus)
-- Add healthcheck endpoint for backend (if added)
-- Use UptimeRobot for external monitoring
-- Add logging in backend (if extended)
+🔹 API Integration
+Uses OpenWeatherMap API endpoint:
+    https://api.openweathermap.org/data/2.5/weather
+API key is not hardcoded — it's injected securely at deployment time using GitHub Secrets
 
-## 🔑 API Key Setup
-Replace `YOUR_API_KEY` in `script.js` with your [OpenWeatherMap](https://openweathermap.org/api) key.
+🔐 Secret Handling (CI/CD-safe)
+Inside script.js, the API key is set as a placeholder:
+    const apiKey = "OPENWEATHER_API_KEY_PLACEHOLDER";
+
+In GitHub Actions, the placeholder is replaced with the actual API key using sed:
+- name: Replace API key
+  env:
+    OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
+  run: |
+    sed -i "s/OPENWEATHER_API_KEY_PLACEHOLDER/$OPENWEATHER_API_KEY/g" script.js
+
+🚀 CI/CD with GitHub Actions
+    Every push to the main branch triggers the workflow:
+        API key is substituted into script.js
+        App is deployed to GitHub Pages using peaceiris/actions-gh-pages
+
+🌐 Live Demo
+The application is deployed via GitHub Pages and can be accessed here:
+
+➡️ https://prakashjoe15-sudo.github.io/weather-app/
+
+
+📁 File Highlights
+| File                           | Purpose                           |
+| ------------------------------ | --------------------------------- |
+| `index.html`                   | HTML layout and structure         |
+| `style.css`                    | Basic UI styling                  |
+| `script.js`                    | JavaScript logic for API call     |
+| `.github/workflows/deploy.yml` | CI/CD workflow with secure deploy |
+
+
