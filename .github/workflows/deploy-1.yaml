@@ -2,7 +2,8 @@ name: Deploy Castweather App
 on:
   push:
     branches: [main]
-
+permissions:
+   contents: write
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
